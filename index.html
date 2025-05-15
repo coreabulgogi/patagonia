@@ -1,257 +1,44 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <title>여러 지도 전환</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kakao Map - Multiple Markers</title>
   <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=6956432726c3dc8f834ab6cf0dea4cd4"></script>
-  <style>
-    #mapA, #mapB {
-      width: 1000px;
-      height: 800px;
-      display: none;
-    }
-    #mapA.active, #mapB.active {
-      display: block;
-    }
-  </style>
 </head>
 <body>
 
-  <h1>매장 현황</h1>
-  <button onclick="showMap('A')">프로스펙스</button>
-  <button onclick="showMap('B')">파타고니아</button>
+  <h1>Patagonia_(25.03기준)_Made by JeongHyeon</h1>
+  
+  <div id="map"></div>
 
-  <div id="mapA" class="active"></div>
-  <div id="mapB"></div>
+<style>
+  #map {
+    width: 100%;
+    max-width: 1000px;
+    height: 70vh; /* 화면 높이의 70% */
+    margin: 0 auto; /* 가운데 정렬 */
+  }
+
+  @media (max-width: 768px) {
+    #map {
+      height: 60vh; /* 모바일에서는 조금 더 작게 */
+    }
+  }
+</style>
 
   <script>
-    const containerA = document.getElementById('mapA');
-    const containerB = document.getElementById('mapB');
-
-    const sangjuCenter = new kakao.maps.LatLng(36.4074, 128.1565);
-
-    const mapA = new kakao.maps.Map(containerA, {
-      center: sangjuCenter,
+    var container = document.getElementById('map');
+    var options = {
+      center: new kakao.maps.LatLng(36.4074, 128.1565), // 경북상주 좌표
       level: 12
-    });
+    };
 
-    const mapB = new kakao.maps.Map(containerB, {
-      center: sangjuCenter,
-      level: 12
-    });
+    var map = new kakao.maps.Map(container, options);
 
-    const markersA = [
-      { title: "광주충장로직영점", latlng: new kakao.maps.LatLng(35.1492, 126.9146) },
-	{ title: "노원직영점", latlng: new kakao.maps.LatLng(37.6532, 127.0613) },
-	{ title: "군산수송직영점", latlng: new kakao.maps.LatLng(35.9684, 126.7151) },
-	{ title: "대구직영점", latlng: new kakao.maps.LatLng(35.8685, 128.5953) },
-	{ title: "목포직영점", latlng: new kakao.maps.LatLng(34.7906, 126.3844) },
-	{ title: "구미직영점", latlng: new kakao.maps.LatLng(36.1285, 128.3317) },
-	{ title: "덕천직영점", latlng: new kakao.maps.LatLng(35.2106, 129.0064) },
-	{ title: "용산상설점", latlng: new kakao.maps.LatLng(37.5279, 126.9678) },
-	{ title: "삼패아울렛직영상설점", latlng: new kakao.maps.LatLng(37.5946, 127.1925) },
-	{ title: "범내직영점", latlng: new kakao.maps.LatLng(35.1442, 129.0589) },
-	{ title: "제천직영점", latlng: new kakao.maps.LatLng(37.1383, 128.2104) },
-	{ title: "강진점", latlng: new kakao.maps.LatLng(34.6402, 126.7704) },
-	{ title: "대전유성직영점", latlng: new kakao.maps.LatLng(36.3624, 127.3366) },
-	{ title: "대전은행직영점", latlng: new kakao.maps.LatLng(36.3295, 127.4277) },
-	{ title: "용산상설점", latlng: new kakao.maps.LatLng(37.5279, 126.9678) },
-	{ title: "가평점", latlng: new kakao.maps.LatLng(37.8297, 127.5139) },
-	{ title: "거제옥포점", latlng: new kakao.maps.LatLng(34.8935, 128.6916) },
-	{ title: "성남직영점", latlng: new kakao.maps.LatLng(37.4416, 127.1329) },
-	{ title: "거창중앙점", latlng: new kakao.maps.LatLng(35.6863, 127.9112) },
-	{ title: "고창점", latlng: new kakao.maps.LatLng(35.4354, 126.6944) },
-	{ title: "논산점", latlng: new kakao.maps.LatLng(36.2058, 127.0841) },
-	{ title: "광주송정점", latlng: new kakao.maps.LatLng(35.1384, 126.7942) },
-	{ title: "남원점", latlng: new kakao.maps.LatLng(35.4065, 127.3777) },
-	{ title: "동해점", latlng: new kakao.maps.LatLng(37.5229, 129.1146) },
-	{ title: "계산점", latlng: new kakao.maps.LatLng(37.5408, 126.7222) },
-	{ title: "천안아울렛직영상설점", latlng: new kakao.maps.LatLng(36.7805, 127.1659) },
-	{ title: "죽전직영점", latlng: new kakao.maps.LatLng(37.3318, 127.1084) },
-	{ title: "경주점", latlng: new kakao.maps.LatLng(35.8433, 129.2118) },
-	{ title: "밀양점", latlng: new kakao.maps.LatLng(35.4926, 128.7512) },
-	{ title: "서인천점", latlng: new kakao.maps.LatLng(37.5027, 126.6718) },
-	{ title: "순천중앙점", latlng: new kakao.maps.LatLng(34.9531, 127.4859) },
-	{ title: "수원영통점", latlng: new kakao.maps.LatLng(37.2666, 127.0768) },
-	{ title: "만수점", latlng: new kakao.maps.LatLng(37.4614, 126.7348) },
-	{ title: "김천점", latlng: new kakao.maps.LatLng(36.1220, 128.1155) },
-	{ title: "금촌점", latlng: new kakao.maps.LatLng(37.7634, 126.7745) },
-	{ title: "부산기장점", latlng: new kakao.maps.LatLng(35.2445, 129.2165) },
-	{ title: "라붐봉천점", latlng: new kakao.maps.LatLng(37.4810, 126.9520) },
-	{ title: "대전판암점", latlng: new kakao.maps.LatLng(36.3175, 127.4553) },
-	{ title: "여수점", latlng: new kakao.maps.LatLng(34.7406, 127.7341) },
-	{ title: "영천점", latlng: new kakao.maps.LatLng(35.9632, 128.9355) },
-	{ title: "여천점", latlng: new kakao.maps.LatLng(34.7598, 127.6669) },
-	{ title: "안강점", latlng: new kakao.maps.LatLng(35.9913, 129.2252) },
-	{ title: "신포점", latlng: new kakao.maps.LatLng(37.4716, 126.6265) },
-	{ title: "신림점", latlng: new kakao.maps.LatLng(37.4864, 126.9290) },
-	{ title: "부안점", latlng: new kakao.maps.LatLng(35.7260, 126.7370) },
-	{ title: "수유점", latlng: new kakao.maps.LatLng(37.6327, 127.0232) },
-	{ title: "부천점", latlng: new kakao.maps.LatLng(37.5203, 126.8045) },
-	{ title: "응암점", latlng: new kakao.maps.LatLng(37.5884, 126.9170) },
-	{ title: "안산한대점", latlng: new kakao.maps.LatLng(37.3045, 126.8442) },
-	{ title: "이리중앙점", latlng: new kakao.maps.LatLng(35.9407, 126.9484) },
-	{ title: "영월점", latlng: new kakao.maps.LatLng(37.1834, 128.4696) },
-	{ title: "조치원점", latlng: new kakao.maps.LatLng(36.6011, 127.2986) },
-	{ title: "예천점", latlng: new kakao.maps.LatLng(36.6555, 128.4538) },
-	{ title: "예산점", latlng: new kakao.maps.LatLng(36.6789, 126.8469) },
-	{ title: "양산점", latlng: new kakao.maps.LatLng(35.3434, 129.0347) },
-	{ title: "왜관점", latlng: new kakao.maps.LatLng(35.9909, 128.3995) },
-	{ title: "평창점", latlng: new kakao.maps.LatLng(37.3671, 128.3957) },
-	{ title: "태능점", latlng: new kakao.maps.LatLng(37.6157, 127.0780) },
-	{ title: "퀸스로드점", latlng: new kakao.maps.LatLng(35.8614, 128.5447) },
-	{ title: "점촌점", latlng: new kakao.maps.LatLng(36.5950, 128.1990) },
-	{ title: "언양점", latlng: new kakao.maps.LatLng(35.5649, 129.1256) },
-	{ title: "중곡점", latlng: new kakao.maps.LatLng(37.5575, 127.0877) },
-	{ title: "울산무거점", latlng: new kakao.maps.LatLng(35.5456, 129.2613) },
-	{ title: "용인점", latlng: new kakao.maps.LatLng(37.2357, 127.2078) },
-	{ title: "진주신안점", latlng: new kakao.maps.LatLng(35.1806, 128.0654) },
-	{ title: "태백점", latlng: new kakao.maps.LatLng(37.1725, 128.9921) },
-	{ title: "목포하당복합점", latlng: new kakao.maps.LatLng(34.8014, 126.4282) },
-	{ title: "진천점", latlng: new kakao.maps.LatLng(36.8555, 127.4450) },
-	{ title: "사천복합점", latlng: new kakao.maps.LatLng(35.0839, 128.0874) },
-	{ title: "원주점", latlng: new kakao.maps.LatLng(38.2673, 128.4573) },
-	{ title: "김포복합점", latlng: new kakao.maps.LatLng(37.6624, 126.6564) },
-	{ title: "창녕중앙점", latlng: new kakao.maps.LatLng(35.5404, 128.4996) },
-	{ title: "함안점", latlng: new kakao.maps.LatLng(35.2774, 128.4042) },
-	{ title: "천안쌍용점", latlng: new kakao.maps.LatLng(36.8026, 127.1315) },
-	{ title: "도봉상설점", latlng: new kakao.maps.LatLng(37.6876, 127.0420) },
-	{ title: "함양점", latlng: new kakao.maps.LatLng(35.5191, 127.7276) },
-	{ title: "춘천명동점", latlng: new kakao.maps.LatLng(37.8792, 127.7271) },
-	{ title: "반여복합점", latlng: new kakao.maps.LatLng(35.2055, 129.1208) },
-	{ title: "대구상설점", latlng: new kakao.maps.LatLng(35.8707, 128.5792) },
-	{ title: "원주복합점", latlng: new kakao.maps.LatLng(38.2673, 128.4573) },
-	{ title: "부전시장팩토리아울렛", latlng: new kakao.maps.LatLng(35.1601, 129.0587) },
-	{ title: "해남점", latlng: new kakao.maps.LatLng(34.5713, 126.5987) },
-	{ title: "이마트광명소하점", latlng: new kakao.maps.LatLng(37.4464, 126.8845) },
-	{ title: "IS스포츠복합점", latlng: new kakao.maps.LatLng(35.9588, 126.9796) },
-	{ title: "의정부복합점", latlng: new kakao.maps.LatLng(37.7411, 127.0493) },
-	{ title: "합성점", latlng: new kakao.maps.LatLng(35.2402, 128.5836) },
-	{ title: "화성봉담점", latlng: new kakao.maps.LatLng(37.2000, 126.9405) },
-	{ title: "이마트봉선점", latlng: new kakao.maps.LatLng(35.1223, 126.9161) },
-	{ title: "성서상설점", latlng: new kakao.maps.LatLng(35.8375, 128.4906) },
-	{ title: "롯데마트화명점", latlng: new kakao.maps.LatLng(35.2351, 129.0130) },
-	{ title: "마산상설점", latlng: new kakao.maps.LatLng(35.2255, 128.5875) },
-	{ title: "전주평화복합점", latlng: new kakao.maps.LatLng(35.7932, 127.1242) },
-	{ title: "종로팩토리아울렛", latlng: new kakao.maps.LatLng(37.5721, 127.0135) },
-	{ title: "이마트청계천점", latlng: new kakao.maps.LatLng(37.5707, 127.0198) },
-	{ title: "김해진영상설점", latlng: new kakao.maps.LatLng(35.3216, 128.7209) },
-	{ title: "이마트창원점", latlng: new kakao.maps.LatLng(35.2265, 128.6801) },
-	{ title: "인천복합점", latlng: new kakao.maps.LatLng(37.4960, 126.7221) },
-	{ title: "포항죽도복합점", latlng: new kakao.maps.LatLng(36.0361, 129.3651) },
-	{ title: "파주팩토리아울렛", latlng: new kakao.maps.LatLng(37.7708, 126.7885) },
-	{ title: "이마트이천점", latlng: new kakao.maps.LatLng(37.2939, 127.4591) },
-	{ title: "이마트세종점", latlng: new kakao.maps.LatLng(36.4709, 127.2509) },
-	{ title: "롯데마트충주점", latlng: new kakao.maps.LatLng(36.9815, 127.9143) },
-	{ title: "이마트서수원점", latlng: new kakao.maps.LatLng(37.2826, 126.9702) },
-	{ title: "홈플러스방학점", latlng: new kakao.maps.LatLng(37.6648, 127.0436) },
-	{ title: "홈플러스북수원아울렛점", latlng: new kakao.maps.LatLng(37.3027, 127.0088) },
-	{ title: "홈플러스동광주점", latlng: new kakao.maps.LatLng(35.1793, 126.9304) },
-	{ title: "진영휴게소아울렛", latlng: new kakao.maps.LatLng(35.2776, 128.7181) },
-	{ title: "이마트안산고잔점", latlng: new kakao.maps.LatLng(37.3028, 126.8137) },
-	{ title: "이마트춘천점", latlng: new kakao.maps.LatLng(37.8640, 127.7183) },
-	{ title: "이마트대전터미널아울렛점", latlng: new kakao.maps.LatLng(36.3503, 127.4367) },
-	{ title: "이마트은평점", latlng: new kakao.maps.LatLng(37.6003, 126.9202) },
-	{ title: "이마트하남아울렛점", latlng: new kakao.maps.LatLng(37.5527, 127.2053) },
-	{ title: "롯데마트진해점", latlng: new kakao.maps.LatLng(35.1581, 128.6987) },
-	{ title: "NC강서점", latlng: new kakao.maps.LatLng(37.5599, 126.8405) },
-	{ title: "2001천호점", latlng: new kakao.maps.LatLng(37.5412, 127.1259) },
-	{ title: "홈플러스금천아울렛점", latlng: new kakao.maps.LatLng(37.4686, 126.8968) },
-	{ title: "이마트천안서북점", latlng: new kakao.maps.LatLng(36.8385, 127.1223) },
-	{ title: "홈플러스김해아울렛점", latlng: new kakao.maps.LatLng(35.2418, 128.8703) },
-	{ title: "홈플러스의정부아울렛점", latlng: new kakao.maps.LatLng(37.7521, 127.0710) },
-	{ title: "이마트수원점", latlng: new kakao.maps.LatLng(37.2505, 127.0196) },
-	{ title: "NC충장점", latlng: new kakao.maps.LatLng(35.1486, 126.9131) },
-	{ title: "NC엑스코점", latlng: new kakao.maps.LatLng(35.9052, 128.6103) },
-	{ title: "홈플러스칠곡점", latlng: new kakao.maps.LatLng(35.9449, 128.5558) },
-	{ title: "이마트연제점", latlng: new kakao.maps.LatLng(35.1761, 129.0813) },
-	{ title: "NC대전유성점", latlng: new kakao.maps.LatLng(36.3537, 127.3440) },
-	{ title: "홈플러스병점아울렛점", latlng: new kakao.maps.LatLng(37.2037, 127.0367) },
-	{ title: "NC송파점", latlng: new kakao.maps.LatLng(37.4777, 127.1251) },
-	{ title: "홈플러스유성점", latlng: new kakao.maps.LatLng(36.3583, 127.3542) },
-	{ title: "홈플러스경산아울렛점", latlng: new kakao.maps.LatLng(35.8328, 128.7356) },
-	{ title: "뉴코아평택점", latlng: new kakao.maps.LatLng(36.9955, 127.1125) },
-	{ title: "뉴코아평촌점", latlng: new kakao.maps.LatLng(37.3891, 126.9512) },
-	{ title: "NC순천점", latlng: new kakao.maps.LatLng(34.9724, 127.5209) },
-	{ title: "홈플러스김포풍무아울렛점", latlng: new kakao.maps.LatLng(37.6098, 126.7241) },
-	{ title: "2001분당점", latlng: new kakao.maps.LatLng(37.3491, 127.1074) },
-	{ title: "NC불광점", latlng: new kakao.maps.LatLng(37.6097, 126.9289) },
-	{ title: "뉴코아아울렛광명점", latlng: new kakao.maps.LatLng(37.4611, 126.8793) },
-	{ title: "모다아울렛울산점", latlng: new kakao.maps.LatLng(35.5770, 129.3571) },
-	{ title: "뉴코아동수원점", latlng: new kakao.maps.LatLng(37.2663, 127.0343) },
-	{ title: "NC고잔점", latlng: new kakao.maps.LatLng(37.3134, 126.8310) },
-	{ title: "모다아울렛순천직영점", latlng: new kakao.maps.LatLng(34.9255, 127.5444) },
-	{ title: "뉴코아인천점", latlng: new kakao.maps.LatLng(37.4440, 126.7006) },
-	{ title: "홈플러스진접점", latlng: new kakao.maps.LatLng(37.7213, 127.1891) },
-	{ title: "2001부평점", latlng: new kakao.maps.LatLng(37.4905, 126.7104) },
-	{ title: "뉴코아부천점", latlng: new kakao.maps.LatLng(37.4876, 126.7527) },
-	{ title: "NC야탑점", latlng: new kakao.maps.LatLng(37.4109, 127.1274) },
-	{ title: "동아쇼핑점", latlng: new kakao.maps.LatLng(35.8663, 128.5918) },
-	{ title: "모다아울렛경주점", latlng: new kakao.maps.LatLng(35.9164, 129.2443) },
-	{ title: "세이브존해운대점", latlng: new kakao.maps.LatLng(35.1624, 129.1613) },
-	{ title: "뉴코아덕천점", latlng: new kakao.maps.LatLng(35.2110, 129.0075) },
-	{ title: "모다아울렛구리남양주직영점", latlng: new kakao.maps.LatLng(37.6333, 127.1159) },
-	{ title: "NC신구로점", latlng: new kakao.maps.LatLng(37.5011, 126.8828) },
-	{ title: "동아수성점", latlng: new kakao.maps.LatLng(35.8210, 128.6403) },
-	{ title: "세이브존성남점", latlng: new kakao.maps.LatLng(37.4439, 127.1534) },
-	{ title: "이마트수원점", latlng: new kakao.maps.LatLng(37.2505, 127.0196) },
-	{ title: "모다아울렛전주김제점", latlng: new kakao.maps.LatLng(35.8171, 126.9932) },
-	{ title: "롯데관악점", latlng: new kakao.maps.LatLng(37.4905, 126.9249) },
-	{ title: "모다아울렛충주점", latlng: new kakao.maps.LatLng(36.9614, 127.8981) },
-	{ title: "모다아울렛천안아산점", latlng: new kakao.maps.LatLng(36.7986, 127.1014) },
-	{ title: "동아강북점", latlng: new kakao.maps.LatLng(35.9329, 128.5489) },
-	{ title: "뉴코아창원점", latlng: new kakao.maps.LatLng(35.2345, 128.6421) },
-	{ title: "롯데강남점", latlng: new kakao.maps.LatLng(37.4969, 127.0532) },
-	{ title: "뉴코아인천논현점", latlng: new kakao.maps.LatLng(37.4005, 126.7253) },
-	{ title: "모다아울렛진주점", latlng: new kakao.maps.LatLng(35.1321, 128.0984) },
-	{ title: "뉴코아일산점", latlng: new kakao.maps.LatLng(37.6546, 126.7768) },
-	{ title: "메가마트동래점", latlng: new kakao.maps.LatLng(35.2045, 129.0811) },
-	{ title: "퍼스트빌리지아산점", latlng: new kakao.maps.LatLng(36.8965, 127.0271) },
-	{ title: "모다아울렛인천점", latlng: new kakao.maps.LatLng(37.5099, 126.6477) },
-	{ title: "롯데영등포점", latlng: new kakao.maps.LatLng(37.5156, 126.9075) },
-	{ title: "애플아울렛사상점", latlng: new kakao.maps.LatLng(35.1631, 128.9830) },
-	{ title: "마리오아울렛가산직영점", latlng: new kakao.maps.LatLng(37.4787, 126.8865) },
-	{ title: "롯데센텀시티점", latlng: new kakao.maps.LatLng(35.1698, 129.1310) },
-	{ title: "롯데구리점", latlng: new kakao.maps.LatLng(37.6025, 127.1437) },
-	{ title: "모다아울렛김천구미점", latlng: new kakao.maps.LatLng(36.1556, 128.2819) },
-	{ title: "모다아울렛곤지암직영점(상설)", latlng: new kakao.maps.LatLng(37.3633, 127.3124) },
-	{ title: "롯데몰광명점", latlng: new kakao.maps.LatLng(37.4243, 126.8828) },
-	{ title: "롯데김포공항점", latlng: new kakao.maps.LatLng(37.5661, 126.8009) },
-	{ title: "롯데부산본점", latlng: new kakao.maps.LatLng(35.1566, 129.0564) },
-	{ title: "현대천호점", latlng: new kakao.maps.LatLng(37.5389, 127.1252) },
-	{ title: "모다아울렛대전점", latlng: new kakao.maps.LatLng(36.3126, 127.3185) },
-	{ title: "세이브존화정점", latlng: new kakao.maps.LatLng(37.6343, 126.8313) },
-	{ title: "롯데중동점", latlng: new kakao.maps.LatLng(37.5025, 126.7752) },
-	{ title: "세이브존노원점", latlng: new kakao.maps.LatLng(37.6366, 127.0684) },
-	{ title: "모다아울렛춘천점", latlng: new kakao.maps.LatLng(37.8689, 127.7207) },
-	{ title: "신세계타임스퀘어점", latlng: new kakao.maps.LatLng(37.5171, 126.9036) },
-	{ title: "롯데대전점", latlng: new kakao.maps.LatLng(36.3406, 127.3895) },
-	{ title: "롯데광복점", latlng: new kakao.maps.LatLng(35.0983, 129.0367) },
-	{ title: "롯데아울렛고양점", latlng: new kakao.maps.LatLng(37.6296, 126.8631) },
-	{ title: "롯데창원점", latlng: new kakao.maps.LatLng(35.2245, 128.6818) },
-	{ title: "신세계아울렛여주점", latlng: new kakao.maps.LatLng(37.2428, 127.6161) },
-	{ title: "롯데청량리점", latlng: new kakao.maps.LatLng(37.5806, 127.0483) },
-	{ title: "세이브존대전직영점", latlng: new kakao.maps.LatLng(36.3517, 127.3957) },
-	{ title: "한성몰남양주점", latlng: new kakao.maps.LatLng(37.6565, 127.2816) },
-	{ title: "롯데잠실점", latlng: new kakao.maps.LatLng(37.5114, 127.0982) },
-	{ title: "롯데아울렛구리점", latlng: new kakao.maps.LatLng(37.6118, 127.1405) },
-	{ title: "롯데아울렛남악점", latlng: new kakao.maps.LatLng(34.8036, 126.4646) },
-	{ title: "AK평택점", latlng: new kakao.maps.LatLng(36.9908, 127.0852) },
-	{ title: "롯데몰군산점", latlng: new kakao.maps.LatLng(35.9764, 126.7391) },
-	{ title: "패션아일랜드대전직영점", latlng: new kakao.maps.LatLng(36.3070, 127.4579) },
-	{ title: "롯데분당점", latlng: new kakao.maps.LatLng(37.3784, 127.1142) },
-	{ title: "롯데미아점", latlng: new kakao.maps.LatLng(37.6145, 127.0305) },
-	{ title: "롯데상인점", latlng: new kakao.maps.LatLng(35.8187, 128.5388) },
-	{ title: "롯데포항점", latlng: new kakao.maps.LatLng(36.0496, 129.3695) },
-	{ title: "커넥트현대부산점", latlng: new kakao.maps.LatLng(35.1412, 129.0586) },
-	{ title: "롯데아울렛파주점", latlng: new kakao.maps.LatLng(37.7179, 126.6938) },
-	{ title: "신세계대전점", latlng: new kakao.maps.LatLng(36.3751, 127.3817) },
-	{ title: "오리지널스포츠신세계시흥점", latlng: new kakao.maps.LatLng(37.3796, 126.7369) },
-	{ title: "오리지널스포츠한남직영점", latlng: new kakao.maps.LatLng(37.5363, 127.0007) }
-    ];
-
-    const markersB = [
-    { title: "파타고니아 퀄리티랩", latlng: new kakao.maps.LatLng(37.5091, 127.0606) },
+    // 매장 위치
+    var positions = [
+      { title: "파타고니아 퀄리티랩", latlng: new kakao.maps.LatLng(37.5091, 127.0606) },
 { title: "서울가로수길직영점", latlng: new kakao.maps.LatLng(37.5193, 127.0236) },
 { title: "서울도봉산직영점 (직영&아울렛)", latlng: new kakao.maps.LatLng(37.6868, 127.0392) },
 { title: "서울성수낙낙직영점", latlng: new kakao.maps.LatLng(37.5461, 127.0657) },
@@ -319,99 +106,82 @@
 { title: "현대아울렛 스페이스원", latlng: new kakao.maps.LatLng(37.6161, 127.1525) },
 { title: "현대아울렛김포점", latlng: new kakao.maps.LatLng(37.5994, 126.7855) },
 { title: "현대아울렛대전점", latlng: new kakao.maps.LatLng(36.4234, 127.3985) }
-
     ];
 
-    function createMarkers(map, markerList) {
-      markerList.forEach(pos => {
-        const marker = new kakao.maps.Marker({
-          map: map,
-          position: pos.latlng,
-          title: pos.title
-        });
+    var markers = [];
 
-        const infowindow = new kakao.maps.InfoWindow({
-          content: `<div style="padding:5px;">${pos.title}</div>`
-        });
-
-        // 현재 인포윈도우가 열려 있는지 상태 저장
-        let isOpen = false;
-
-        kakao.maps.event.addListener(marker, 'click', function () {
-          if (isOpen) {
-            infowindow.close();
-            isOpen = false;
-          } else {
-            infowindow.open(map, marker);
-            isOpen = true;
-          }
-        });
+    // 매장 마커 생성
+    positions.forEach(function(pos) {
+      var marker = new kakao.maps.Marker({
+        map: map,
+        position: pos.latlng,
+        title: pos.title
       });
-    }
 
-    createMarkers(mapA, markersA);
-    createMarkers(mapB, markersB);
+      var infowindow = new kakao.maps.InfoWindow({
+        content: `<div style="padding:5px;">${pos.title}</div>`
+      });
 
-    function showCurrentLocationOnMap(map) {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function(position) {
-          const lat = position.coords.latitude;
-          const lon = position.coords.longitude;
-          const locPosition = new kakao.maps.LatLng(lat, lon);
+      markers.push({
+        marker: marker,
+        infowindow: infowindow,
+        isOpen: false
+      });
 
-          const markerImage = new kakao.maps.MarkerImage(
-            "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png",
-            new kakao.maps.Size(24, 35),
-            { offset: new kakao.maps.Point(12, 35) }
-          );
+      kakao.maps.event.addListener(marker, "click", function() {
+        var markerData = markers.find(m => m.marker === marker);
+        if (markerData.isOpen) {
+          markerData.infowindow.close();
+        } else {
+          markerData.infowindow.open(map, marker);
+        }
+        markerData.isOpen = !markerData.isOpen;
+      });
+    });
 
-          const userMarker = new kakao.maps.Marker({
-            map: map,
-            position: locPosition,
-            image: markerImage,
-            title: "현재 위치"
-          });
+    // 사용자 현재 위치 표시
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function(position) {
+        var lat = position.coords.latitude;
+        var lon = position.coords.longitude;
+        var locPosition = new kakao.maps.LatLng(lat, lon);
+        
+        // 사용자 위치 마커 이미지 설정
+        var markerImage = new kakao.maps.MarkerImage(
+          "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png",
+          new kakao.maps.Size(24, 35),
+          { offset: new kakao.maps.Point(12, 35) }
+        );
 
-          const infowindow = new kakao.maps.InfoWindow({
-            content: "<div style='padding:5px;'>현재 위치</div>"
-          });
-
-          let isUserInfoOpen = false;
-
-          kakao.maps.event.addListener(userMarker, 'click', function() {
-            if (isUserInfoOpen) {
-              infowindow.close();
-              isUserInfoOpen = false;
-            } else {
-              infowindow.open(map, userMarker);
-              isUserInfoOpen = true;
-            }
-          });
-
-        }, function() {
-          alert("위치 정보를 가져올 수 없습니다.");
+        // 마커 생성
+        var userMarker = new kakao.maps.Marker({
+          map: map,
+          position: locPosition,
+          title: "현재 위치",
+          image: markerImage
         });
-      } else {
-        alert("이 브라우저는 위치 정보를 지원하지 않습니다.");
-      }
-    }
 
-    showCurrentLocationOnMap(mapA);
-    showCurrentLocationOnMap(mapB);
+        var userInfowindow = new kakao.maps.InfoWindow({
+          content: "<div style='padding:5px;'>현재 위치</div>"
+        });
 
-    function showMap(mapId) {
-      containerA.classList.remove('active');
-      containerB.classList.remove('active');
+        // 인포윈도우 열림 상태 저장
+        var isUserInfoOpen = false;
 
-      if (mapId === 'A') {
-        containerA.classList.add('active');
-        mapA.setCenter(sangjuCenter);
-        mapA.relayout();
-      } else if (mapId === 'B') {
-        containerB.classList.add('active');
-        mapB.setCenter(sangjuCenter);
-        mapB.relayout();
-      }
+        kakao.maps.event.addListener(userMarker, 'click', function() {
+          if (isUserInfoOpen) {
+            userInfowindow.close();
+          } else {
+            userInfowindow.open(map, userMarker);
+          }
+          isUserInfoOpen = !isUserInfoOpen;
+        });
+
+      }, function(error) {
+        alert("위치 정보를 가져올 수 없습니다.");
+      });
+    } else {
+      alert("이 브라우저는 위치 정보를 지원하지 않습니다.");
     }
   </script>
 
