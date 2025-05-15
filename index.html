@@ -30,8 +30,8 @@
   <script>
     var container = document.getElementById('map');
     var options = {
-      center: new kakao.maps.LatLng(36.4074, 128.1565), // 경북상주 좌표
-      level: 12
+      center: new kakao.maps.LatLng(37.5665, 126.9780), // 서울 좌표
+      level: 4 // 지도 확대 레벨 (낮을수록 확대)
     };
 
     var map = new kakao.maps.Map(container, options);
@@ -145,6 +145,8 @@
         var lat = position.coords.latitude;
         var lon = position.coords.longitude;
         var locPosition = new kakao.maps.LatLng(lat, lon);
+        // 새로 추가
+		map.setCenter(locPosition)
         
         // 사용자 위치 마커 이미지 설정
         var markerImage = new kakao.maps.MarkerImage(
