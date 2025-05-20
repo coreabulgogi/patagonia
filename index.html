@@ -8,7 +8,7 @@
 </head>
 <body>
 
-  <h1>Patagonia_(25.05기준)_Made by JeongHyeon</h1>
+  <h1>Patagonia_(25.05기준)</h1>
   
   <div id="map"></div>
 
@@ -53,7 +53,6 @@
 { title: "롯데동탄점", latlng: new kakao.maps.LatLng(37.2006, 127.0982) },
 { title: "롯데본점", latlng: new kakao.maps.LatLng(37.5653, 126.9810) },
 { title: "롯데부산점", latlng: new kakao.maps.LatLng(35.1566, 129.0564) },
-{ title: "롯데수원점", latlng: new kakao.maps.LatLng(37.2641, 126.9973) },
 { title: "롯데영등포점", latlng: new kakao.maps.LatLng(37.5156, 126.9075) },
 { title: "롯데울산점", latlng: new kakao.maps.LatLng(35.5386, 129.3388) },
 { title: "롯데인천터미널점", latlng: new kakao.maps.LatLng(37.4425, 126.7017) },
@@ -88,9 +87,12 @@
 { title: "스타필드고양점", latlng: new kakao.maps.LatLng(37.6472, 126.8957) },
 { title: "스타필드안성점", latlng: new kakao.maps.LatLng(36.9973, 127.1478) },
 { title: "스타필드하남점", latlng: new kakao.maps.LatLng(37.5454, 127.2239) },
+{ title: "타임빌라스 수원점", latlng: new kakao.maps.LatLng(37.2641, 126.9973) },
+{ title: "트리플스트리트송도점", latlng: new kakao.maps.LatLng(37.3797, 126.6609) },
 { title: "광주충장로점", latlng: new kakao.maps.LatLng(35.1488, 126.9151) },
 { title: "대구동성로점", latlng: new kakao.maps.LatLng(35.8680, 128.5944) },
 { title: "대전은행점", latlng: new kakao.maps.LatLng(36.3280, 127.4292) },
+{ title: "서울홀라인점", latlng: new kakao.maps.LatLng(37.5482, 126.9219) },
 { title: "울산영남알프스점", latlng: new kakao.maps.LatLng(35.5560, 129.0811) },
 { title: "청주순환로점", latlng: new kakao.maps.LatLng(36.6439, 127.4220) },
 { title: "롯데아울렛기흥점", latlng: new kakao.maps.LatLng(37.2255, 127.1212) },
@@ -104,7 +106,6 @@
 { title: "현대아울렛 스페이스원", latlng: new kakao.maps.LatLng(37.6161, 127.1525) },
 { title: "현대아울렛김포점", latlng: new kakao.maps.LatLng(37.5994, 126.7855) },
 { title: "현대아울렛대전점", latlng: new kakao.maps.LatLng(36.4234, 127.3985) }
-
     ];
 
     var markers = [];
@@ -144,8 +145,6 @@
         var lat = position.coords.latitude;
         var lon = position.coords.longitude;
         var locPosition = new kakao.maps.LatLng(lat, lon);
-        // 새로 추가
-		map.setCenter(locPosition)
         
         // 사용자 위치 마커 이미지 설정
         var markerImage = new kakao.maps.MarkerImage(
