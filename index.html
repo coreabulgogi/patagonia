@@ -12,29 +12,25 @@
   
   <div id="map"></div>
 
-<style>
-  #map {
-    width: 100%;
-    max-width: 1000px;
-    height: 70vh; /* 화면 높이의 70% */
-    margin: 0 auto; /* 가운데 정렬 */
-  }
-
-  @media (max-width: 768px) {
+  <style>
     #map {
-      height: 60vh; /* 모바일에서는 조금 더 작게 */
+      width: 100%;
+      max-width: 1000px;
+      height: 70vh;
+      margin: 0 auto;
     }
-  }
-</style>
+
+    @media (max-width: 768px) {
+      #map {
+        height: 60vh;
+      }
+    }
+  </style>
 
   <script>
     var container = document.getElementById('map');
-    var options = {
-      center: new kakao.maps.LatLng(37.5665, 126.9780), // 서울 좌표
-      level: 4 // 지도 확대 레벨 (낮을수록 확대)
-    };
-
-    var map = new kakao.maps.Map(container, options);
+    var map;
+    var markers = [];
 
     // 매장 위치
     var positions = [
@@ -108,36 +104,43 @@
 { title: "현대아울렛대전점", latlng: new kakao.maps.LatLng(36.4234, 127.3985) }
     ];
 
-    var markers = [];
+    // 지도 생성 함수
+    function createMap(centerPosition) {
+      var options = {
+        center: centerPosition,
+        level: 4
+      };
+      map = new kakao.maps.Map(container, options);
 
-    // 매장 마커 생성
-    positions.forEach(function(pos) {
-      var marker = new kakao.maps.Marker({
-        map: map,
-        position: pos.latlng,
-        title: pos.title
-      });
+      // 매장 마커 생성
+      positions.forEach(function(pos) {
+        var marker = new kakao.maps.Marker({
+          map: map,
+          position: pos.latlng,
+          title: pos.title
+        });
 
-      var infowindow = new kakao.maps.InfoWindow({
-        content: `<div style="padding:5px;">${pos.title}</div>`
-      });
+        var infowindow = new kakao.maps.InfoWindow({
+          content: `<div style="padding:5px;">${pos.title}</div>`
+        });
 
-      markers.push({
-        marker: marker,
-        infowindow: infowindow,
-        isOpen: false
-      });
+        markers.push({
+          marker: marker,
+          infowindow: infowindow,
+          isOpen: false
+        });
 
-      kakao.maps.event.addListener(marker, "click", function() {
-        var markerData = markers.find(m => m.marker === marker);
-        if (markerData.isOpen) {
-          markerData.infowindow.close();
-        } else {
-          markerData.infowindow.open(map, marker);
-        }
-        markerData.isOpen = !markerData.isOpen;
+        kakao.maps.event.addListener(marker, "click", function() {
+          var markerData = markers.find(m => m.marker === marker);
+          if (markerData.isOpen) {
+            markerData.infowindow.close();
+          } else {
+            markerData.infowindow.open(map, marker);
+          }
+          markerData.isOpen = !markerData.isOpen;
+        });
       });
-    });
+    }
 
     // 사용자 현재 위치 표시
     if (navigator.geolocation) {
@@ -145,15 +148,15 @@
         var lat = position.coords.latitude;
         var lon = position.coords.longitude;
         var locPosition = new kakao.maps.LatLng(lat, lon);
-        
-        // 사용자 위치 마커 이미지 설정
+
+        createMap(locPosition); // 현재 위치를 중심으로 지도 생성
+
         var markerImage = new kakao.maps.MarkerImage(
           "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png",
           new kakao.maps.Size(24, 35),
           { offset: new kakao.maps.Point(12, 35) }
         );
 
-        // 마커 생성
         var userMarker = new kakao.maps.Marker({
           map: map,
           position: locPosition,
@@ -165,7 +168,6 @@
           content: "<div style='padding:5px;'>현재 위치</div>"
         });
 
-        // 인포윈도우 열림 상태 저장
         var isUserInfoOpen = false;
 
         kakao.maps.event.addListener(userMarker, 'click', function() {
@@ -179,9 +181,11 @@
 
       }, function(error) {
         alert("위치 정보를 가져올 수 없습니다.");
+        createMap(new kakao.maps.LatLng(37.5665, 126.9780)); // 서울 기본 좌표로 fallback
       });
     } else {
       alert("이 브라우저는 위치 정보를 지원하지 않습니다.");
+      createMap(new kakao.maps.LatLng(37.5665, 126.9780)); // 서울 기본 좌표로 fallback
     }
   </script>
 
